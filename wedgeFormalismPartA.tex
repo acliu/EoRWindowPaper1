@@ -83,7 +83,28 @@ We accomplish our goals by making use of the quadratic estimator formalism, whic
 
 With our fully covariant treatment, we find that the wedge is not simply a region of large foreground errors and biases---it is also a region where errors are strongly correlated.  This reduces the number of independent Fourier modes that can be measured within the wedge, suggesting that previous sensitivity estimates (such as those in Refs. \cite{Parsons2012a,Beardsley2013,Pober2014}) may be overly optimistic, particularly for arrays that make use of long baselines (such as LOFAR or GMRT).  In fact, the rewards for working within the wedge may be overrated as a result of this, but of course this cannot be quantified without a rigorous way to compute the error statistics of the wedge---hence the present paper.
 
-The rest of this work is organized as follows.  In Section \ref{sec:InstrumentResponse} we examine the measurement equation of an interferometer in detail, paying special attention to chromatic effects.  This provides a first non-covariant preview of the foreground wedge, which we generalize to an approximate, but fully covariant description in Section \ref{sec:basicEstAnalytic}, following a review of the quadratic estimator formalism in Section \ref{sec:QuadEst}.  In Section \ref{sec:basicEstNumerical} we discard the approximations made in Section \ref{sec:basicEstAnalytic} in a full numerical implementation of our formalism.  We summarize our conclusions in Section \ref{sec:Conclusions}.
+The rest of this work is organized as follows.  In Section \ref{sec:InstrumentResponse} we examine the measurement equation of an interferometer in detail, paying special attention to chromatic effects.  This provides a first non-covariant preview of the foreground wedge, which we generalize to an approximate, but fully covariant description in Section \ref{sec:basicEstAnalytic}, following a review of the quadratic estimator formalism in Section \ref{sec:QuadEst}.  In Section \ref{sec:basicEstNumerical} we discard the approximations made in Section \ref{sec:basicEstAnalytic} in a full numerical implementation of our formalism.  We summarize our conclusions in Section \ref{sec:Conclusions}.  Because a large number of mathematical quantities are defined in this paper, we provide a dictionary in Table \ref{tab:Definitions} for the reader's convenience.
+
+\begin{table*}
+\caption{\label{tab:Definitions}Dictionary of quantities}
+\begin{ruledtabular}
+\begin{tabular}{llll}
+Quantity & Length/Dimensions  & Context & Meaning/Definition\\
+\hline
+Basic coordinates: &&&\\
+\nu &&& \\
+\hline
+Instrumental parameters: &  & &\\
+Gulu & gulu & asdf &\\
+\hline
+Sky parameters: &&& \\
+&&& \\
+\hline
+Quadratic estimator quantities: &  & &\\
+Gulu & gulu & asdf &
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
 
 \section{A non-covariant preview of the foreground wedge}
 \label{sec:InstrumentResponse}
