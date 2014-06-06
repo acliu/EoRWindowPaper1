@@ -86,22 +86,46 @@ With our fully covariant treatment, we find that the wedge is not simply a regio
 The rest of this work is organized as follows.  In Section \ref{sec:InstrumentResponse} we examine the measurement equation of an interferometer in detail, paying special attention to chromatic effects.  This provides a first non-covariant preview of the foreground wedge, which we generalize to an approximate, but fully covariant description in Section \ref{sec:basicEstAnalytic}, following a review of the quadratic estimator formalism in Section \ref{sec:QuadEst}.  In Section \ref{sec:basicEstNumerical} we discard the approximations made in Section \ref{sec:basicEstAnalytic} in a full numerical implementation of our formalism.  We summarize our conclusions in Section \ref{sec:Conclusions}.  Because a large number of mathematical quantities are defined in this paper, we provide a dictionary in Table \ref{tab:Definitions} for the reader's convenience.
 
 \begin{table*}
-\caption{\label{tab:Definitions}Dictionary of quantities}
+\caption{\label{tab:Definitions}Dictionary of quantities.  First column gives the quantity, the second column the length (for vectors) or the dimensions (for matrices).  Scalars and short vectors are denoted by ``---".  Third column gives equation references (except where the quantities are ubiquitous, in which case we give the reference for a quantity's first appearance), and the fourth column gives the meaning or definition of the quantity.}
 \begin{ruledtabular}
 \begin{tabular}{llll}
-Quantity & Length/Dimensions  & Context & Meaning/Definition\\
+Quantity & Meaning/Definition & Length/Dimensions  & Context \\
 \hline
-Basic coordinates: &&&\\
+Basic quantities: &&&\\
 $\nu$ & & & \\
+$\boldsymbol \theta$ & & & \\
+$\mathbf{u}$ & & & \\
+$V(\mathbf{b}, \nu)$ & Visibility measured by baseline $\mathbf{b}$ at frequency $\nu$ & & \\
+$\widetilde{V} (\mathbf{b}, \tau)$ & Delay-space visibility by baseline $\mathbf{b}$ at delay $\tau$ & & \\
 \hline
 Instrumental parameters: &  & &\\
-Gulu & gulu & asdf &\\
+$\mathbf{b}$ & Baseline vector & --- & Eq. \eqref{eq:basicVis} \\
+$\boldsymbol \theta_0 $ & Characteristic width of primary beam & --- & Eq. \eqref{eq:basicVis} \\
+$A$ & Primary beam function & --- & Eq. \eqref{eq:basicVis} \\
+$\widetilde{A}$ & Spatial Fourier transform of primary beam function & --- & Eq. \eqref{eq:FirstAtilde} \\
+$\widetilde{A}_{b\parallel} $ & Profile of $\widetilde{A}$ parallel to baseline vector direction & --- & Eq. \eqref{eq:SepPrimaryBeam} \\
+$\widetilde{A}_{b\perp} $ & Profile of $\widetilde{A}$ perpendicular to baseline vector direction & --- & Eq. \eqref{eq:SepPrimaryBeam} \\
+$B_\textrm{chan} $ & Frequency channel width & --- & Eq. \eqref{eq:measEqn} \\
+$\gamma $ & Frequency channel profile & --- & Eq. \eqref{eq:measEqn} \\
+$\widetilde{\gamma} $ & Fourier transform of frequency channel profile $\gamma$ & --- & Eq. \eqref{eq:vIntegratedGenVtilde} \\
+$B_\textrm{band} $ & Bandwidth corresponding to depth of cosmological volume & --- & Eq. \eqref{eq:DelayDef} \\
+
 \hline
-Sky parameters: &&& \\
-&&& \\
+Sky/cosmological quantities: &&& \\
+$I(\boldsymbol \theta, \nu)$ & Sky brightness temperature at angle $\boldsymbol \theta$ and frequency $\nu$ && Eq. \eqref{eq:basicVis} \\
+$\widetilde{I}(\mathbf{u}, \eta)$ & Fourier transform of the sky brightness temperature  && Eq. \eqref{eq:FourierDef} \\
+ & at angular wavenumber $\mathbf{u}$ and line-of-sight wavenumber $\eta$ && \\
+ $P(u,\eta)$ & Cylindrically-binned power spectrum at angular  && \\
+  & wavenumber $\mathbf{u}$ and line-of-sight wavenumber $\eta$ && \\
 \hline
-Quadratic estimator quantities: &  & &\\
-Gulu & gulu & asdf &
+Data analysis quantities: &  & &\\
+$\phi$ & Bandpass or tapering function &  & Eq. \eqref{eq:DelayDef} \\
+$\widetilde{\phi}$ & Fourier transform of bandpass/tapering function $\phi$ & --- & Eq. \eqref{eq:shortBlVtilde} \\
+$\mathbf{x}$ & Serialized data vector of visibilities & $N_{b}N_{\nu}$ & Eq. \eqref{eq:xvectdef} \\
+$\mathbf{C}$ & Total covariance matrix of measurements $\mathbf{C} \equiv \langle \mathbf{x} \mathbf{x}^\dagger \rangle$ & $N_{b}N_{\nu} \times N_{b}N_{\nu}$ & Eq. \eqref{eq:C=N+S} \\
+$\mathbf{N}$ & Noise covariance matrix  & $N_{b}N_{\nu} \times N_{b}N_{\nu}$ & Eq. \eqref{eq:C=N+S} \\
+$\mathbf{S}$ & Signal covariance matrix  & $N_{b}N_{\nu} \times N_{b}N_{\nu}$ & Eq. \eqref{eq:genCovar} \\
+$h(\mathbf{u}, \eta; \mathbf{b}, \tau)$ & & & Eq. \eqref{eq:hDef} \\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
@@ -149,7 +173,7 @@ Inserting  Eqs. \eqref{eq:measEqn} and \eqref{eq:FourierDef} into Eq. \eqref{eq:
 \begin{subequations}
 \begin{eqnarray}
 \widetilde{V} (\mathbf{b}, \tau) &=&\int d^2\mathbf{u} \, d\eta \widetilde{I} (\mathbf{u}, \eta) \int d^2 \boldsymbol \theta \,A \left( \frac{\boldsymbol \theta}{\theta_0} \right) \int d\nu \frac{d\nu^\prime}{B_\textrm{chan}} e^{-i 2 \pi \frac{\nu^\prime}{c} \mathbf{b} \cdot \boldsymbol \theta} \gamma\left( \frac{\nu-\nu^\prime}{B_\textrm{chan}} \right) \phi \left( \frac{\nu - \nu_0}{B_\textrm{band}} \right) e^{-i 2\pi \nu \tau} e^{i 2 \pi ( \mathbf{u} \cdot \boldsymbol \theta + \eta \nu^\prime)} \\
-&=& \int d^2\mathbf{u} \, d\eta \widetilde{I} (\mathbf{u}, \eta) \theta_0^2  \int d\nu \frac{d\nu^\prime}{B_\textrm{chan}} \widetilde{A} \left[ \theta_0 \left( \mathbf{u} - \frac{\nu^\prime}{c} \mathbf{b} \right) \right] \gamma\left( \frac{\nu-\nu^\prime}{B_\textrm{chan}} \right) \phi \left( \frac{\nu - \nu_0}{B_\textrm{band}} \right) e^{i 2\pi(\nu^\prime \eta- \nu \tau)}  
+&=& \int d^2\mathbf{u} \, d\eta \widetilde{I} (\mathbf{u}, \eta) \theta_0^2  \int d\nu \frac{d\nu^\prime}{B_\textrm{chan}} \widetilde{A} \left[ \theta_0 \left( \mathbf{u} - \frac{\nu^\prime}{c} \mathbf{b} \right) \right] \gamma\left( \frac{\nu-\nu^\prime}{B_\textrm{chan}} \right) \phi \left( \frac{\nu - \nu_0}{B_\textrm{band}} \right) e^{i 2\pi(\nu^\prime \eta- \nu \tau)}  \label{eq:FirstAtilde}
 \end{eqnarray}
 \end{subequations}
 The integral over $\nu^\prime$ can be simplified because $\widetilde{A}$ is a much broader function (with a characteristic width of $c\mathbf{b} / \theta_0$) than $\gamma$ (which has a characteristic width of $B_\textrm{chan}$).  For a typical EoR  experiment, one might have $\nu_0=150\,\textrm{MHz}$ and $B_\textrm{chan} = 50 \,\textrm{kHz}$.  Even with a rather conservative $\theta_0 = 1\,\textrm{radian}$, $\widetilde{A}$ is wider than $\gamma$ for any baseline shorter than $\sim 3000\lambda$.  With compact arrays giving the highest sensitivity \cite{Parsons2012a,Pober2014}, very few interferometers that are optimized for an EoR measurement have any relevant sensitivity on baselines this long.  As a result, $\widetilde{A}$ can be factored out of the integral and evaluated at $\nu^\prime = \nu$, leaving a Fourier transform over the $\nu^\prime$ variable.  Defining $\widetilde{\gamma}$ to be the Fourier transform of $\gamma$, this leaves
@@ -208,6 +232,7 @@ Until now, our focus has been on the measurement of a visibility, which is \emph
 
 The central quantity that encodes our instrument (and therefore the statistical properties of our estimators) is the data covariance matrix $\mathbf{C}$.  To form the covariance matrix, imagine that our input data (organized by baseline and delay mode) is serialized into a data vector $\mathbf{x}$, i.e.,
 \begin{equation}
+\label{eq:xvectdef}
 \mathbf{x} = \left( \begin{array}{c}
 \widetilde{V} (\mathbf{b}_1, \tau_1) \\
 \widetilde{V} (\mathbf{b}_1, \tau_2) \\
@@ -222,6 +247,7 @@ The covariance matrix is then given by $\mathbf{C} \equiv \langle \mathbf{x} \ma
 
 Although we omitted noise contributions in the previous section for notational cleanliness, they of course contribute to the variance captured by $\mathbf{C}$.  Assuming that instrumental noise is uncorrelated with sky signals, the noise appears as an additive term to the sky covariance, so that we can write $\mathbf{C}$ as
 \begin{equation}
+\label{eq:C=N+S}
 \mathbf{C} \equiv \mathbf{N} + \mathbf{S},
 \end{equation}
 where $\mathbf{S}$ is the sky signal portion of the covariance.  Inserting  Eq. \eqref{eq:genVtilde} into our general definition of the data covariance, we obtain
